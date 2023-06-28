@@ -69,6 +69,15 @@ Cuenta con unos pocos, se irán agregando en la medida que los vaya necesitando.
 - Listar Pagos (Filtrable)
 - Realizar Pago
 
+### Ventas
+
+- Obtener Factura por ID
+- Listar Facturas (Filtrable)
+- Obtener Cliente por ID
+- Listar Clientes (Filtrable)
+- Obtener Cobro por ID
+- Listar Cobros (Filtrable)
+
 ### Cuentas
 
 - Obtener Cuenta de Banco por ID

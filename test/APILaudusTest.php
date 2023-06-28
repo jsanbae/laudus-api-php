@@ -27,7 +27,6 @@ class APILaudusTest extends TestCase
     public function test_get_token()
     {
         $token = $this->api_client->getToken();
-// var_dump($token);exit;
         $this->assertArrayHasKey('token', $token['data'], "Couldn't get token");
     }
 
@@ -35,7 +34,6 @@ class APILaudusTest extends TestCase
     {
         $token = $this->api_client->getToken()['data'];
         $is_valid_token = $this->api_client->isValidToken($token);
-        // var_dump($token, $is_valid_token);exit;
 
         $this->assertTrue($is_valid_token, 'Token is not valid');
     }
@@ -48,8 +46,6 @@ class APILaudusTest extends TestCase
         ->addFilter(new FilterList('id', '>', 0))
         ->addOrderBy(new OrderByList('category', 'DESC'))
         ;
-
-        // dd($settingsList);
 
         $this->assertArrayHasKey('fields', $settingsList->toArray(), "Can't get fields");
         $this->assertArrayHasKey('filterBy', $settingsList->toArray(), "Can't get filterBy");
@@ -67,11 +63,9 @@ class APILaudusTest extends TestCase
         ->addOrderBy(new OrderByList('accountNumber', 'DESC'))
         ;
 
-        $data_from_api = $this->api_client->Cuentas()->Contables()->list($settingsList);
+        $api_response = $this->api_client->Cuentas()->Contables()->list($settingsList);
 
-        // var_dump($data_from_api);exit;
-
-        $this->assertEquals($data_from_api['data'][0]->accountNumber, $account_number, "Couldn't retrieve cuentas from API");
+        $this->assertEquals($api_response['data'][0]->accountNumber, $account_number, "Couldn't retrieve cuentas from API");
     }
 
     public function test_cuentas_bancarias()
@@ -84,11 +78,9 @@ class APILaudusTest extends TestCase
         ->addOrderBy(new OrderByList('bankId', 'DESC'))
         ;
 
-        $data_from_api = $this->api_client->Cuentas()->Bancarias()->list($settingsList);
+        $api_response = $this->api_client->Cuentas()->Bancarias()->list($settingsList);
 
-        // var_dump($data_from_api);exit;
-
-        $this->assertEquals($data_from_api['data'][0]->bankId, '04', "Couldn't retrieve cuentas bancarias from API");
+        $this->assertEquals($api_response['data'][0]->bankId, '04', "Couldn't retrieve cuentas bancarias from API");
     }
 
     public function test_compras_pagos()
@@ -102,12 +94,10 @@ class APILaudusTest extends TestCase
         ->addOrderBy(new OrderByList('paymentId', 'DESC'))
         ;
 
-        // $data_from_api = $this->api_client->Compras()->Pagos()->get($payment_id);
-        $data_from_api = $this->api_client->Compras()->Pagos()->list($settingsList);
+        // $api_response = $this->api_client->Compras()->Pagos()->get($payment_id);
+        $api_response = $this->api_client->Compras()->Pagos()->list($settingsList);
 
-        // var_dump($data_from_api);exit;
-
-        $this->assertEquals($data_from_api['data'][0]->paymentId, $payment_id, "Couldn't retrieve Pagos from API");
+        $this->assertEquals($api_response['data'][0]->paymentId, $payment_id, "Couldn't retrieve Pagos from API");
     }
 
     public function test_compras_pagos_pagar()
@@ -137,11 +127,9 @@ class APILaudusTest extends TestCase
             ]
         ];
 
-        $data_from_api = $this->api_client->Compras()->Pagos()->Pagar($pago);
+        $api_response = $this->api_client->Compras()->Pagos()->Pagar($pago);
 
-        // var_dump($data_from_api);exit;
-
-        $this->assertEquals($data_from_api['data'][0]->purchaseInvoices_purchaseInvoiceId, $purchase_invoice_id, "Pagos couldn't be done from API");
+        $this->assertEquals($api_response['data'][0]->purchaseInvoices_purchaseInvoiceId, $purchase_invoice_id, "Pagos couldn't be done from API");
     }
 
     public function test_compras_facturas()
@@ -155,11 +143,47 @@ class APILaudusTest extends TestCase
         ->addOrderBy(new OrderByList('docNumber', 'DESC'))
         ;
 
-        $data_from_api = $this->api_client->Compras()->Facturas()->list($settingsList);
+        $api_response = $this->api_client->Compras()->Facturas()->list($settingsList);
 
-        // var_dump($data_from_api);exit;
+        $this->assertEquals($api_response['data'][0]->docNumber, $doc_number, "Can't retrieve Pagos from API");
+    }
 
-        $this->assertEquals($data_from_api['data'][0]->docNumber, $doc_number, "Can't retrieve Pagos from API");
+    public function test_ventas_cobros_list()
+    {
+        $doc_number = 130;
+        $receipt_id = 101;
+
+        $settingsList = new SettingsList();
+        // $settingsList->setFields($this->api_client->Ventas()->Cobros()->getFields())
+        $settingsList->setFields($this->api_client->Ventas()->Cobros()->getFields())
+        ->setOptions(new OptionsList(0, 1))
+        ->addFilter(new FilterList("salesInvoices.docNumber",  "contains", [$doc_number]))
+        ->addOrderBy(new OrderByList('salesInvoices.docNumber', 'DESC'))
+        ;
+
+        // $api_response = $this->api_client->Ventas()->Cobros()->list($settingsList);
+        $api_response = $this->api_client->Ventas()->Cobros()->get($receipt_id);
+
+        $this->assertEquals($api_response['data'][0]->salesInvoice, $doc_number, "Can't retrieve Pagos from API");
+    }
+
+    public function test_ventas_facturas_list()
+    {
+        $doc_number = 492;
+        // $cliente_vatID = "";
+
+        $settingsList = new SettingsList();
+        $settingsList->setFields($this->api_client->Ventas()->Facturas()->getFields())
+        ->setOptions(new OptionsList(0, 1))
+        ->addFilter(new FilterList("docNumber",  "contains", [$doc_number]))
+        // ->addFilter(new FilterList("customer.VATId",  "contains", [$cliente_vatID]))
+        ->addOrderBy(new OrderByList('docNumber', 'DESC'))
+        ;
+
+        $api_response = $this->api_client->Ventas()->Facturas()->list($settingsList);
+        // $api_response = $this->api_client->Ventas()->Cobros()->get($receipt_id);
+
+        $this->assertEquals($api_response['data'][0]->salesInvoice, $doc_number, "Can't retrieve Pagos from API");
     }
 
 }

@@ -5,6 +5,7 @@ namespace Jsanbae\LaudusAPIPHP;
 use Jsanbae\LaudusAPIPHP\StdResponse;
 use Jsanbae\LaudusAPIPHP\Endpoints\Compras;
 use Jsanbae\LaudusAPIPHP\Endpoints\Cuentas;
+use Jsanbae\LaudusAPIPHP\Endpoints\Ventas;
 use Jsanbae\LaudusAPIPHP\Credentials\LaudusCredential;
 
 class LaudusAPI
@@ -82,6 +83,13 @@ class LaudusAPI
         $jwt = $this->reValidatedToken();
 
         return new Compras($jwt);
+    }
+    
+    public function Ventas():Ventas
+    {
+        $jwt = $this->reValidatedToken();
+
+        return new Ventas($jwt);
     }
 
 }
