@@ -57,4 +57,34 @@ class Cobros extends APIBase
         return 'https://api.laudus.cl/sales/receipts/list';
     }
 
+    public function Cobrar(array $_cobro):array
+    {
+        try {
+
+            $request = curl_init('https://api.laudus.cl/sales/receipts'); 
+            curl_setopt($request, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($request, CURLOPT_CUSTOMREQUEST, "POST");
+            curl_setopt($request, CURLOPT_POSTFIELDS, json_encode($_cobro));
+            curl_setopt($request, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($request, CURLOPT_HTTPHEADER, array(
+                "Accept: application/json",
+                "Content-Type: application/json",
+                "Authorization: Bearer " . $this->token)
+            );
+
+            //make POST
+            $response = curl_exec($request);
+            //respond status code
+            $responseStatusCode = curl_getinfo($request, CURLINFO_HTTP_CODE);
+            curl_close($request);
+
+            $response_decoded = (array) json_decode($response);
+
+            return (new StdResponse($response_decoded, $responseStatusCode))();
+            
+        } catch (\Throwable $t) {
+            throw new \Exception("Error API Connection: " . $t->getMessage() . "\n");
+        }
+    }
+
 }

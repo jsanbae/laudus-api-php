@@ -77,6 +77,7 @@ Cuenta con unos pocos, se irán agregando en la medida que los vaya necesitando.
 - Listar Clientes (Filtrable)
 - Obtener Cobro por ID
 - Listar Cobros (Filtrable)
+- Realizar Cobro
 
 ### Cuentas
 

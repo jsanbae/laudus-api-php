@@ -43,8 +43,8 @@ class Facturas extends APIBase
         "branch.branchId",
         "branch.name",
 
-        "pos.posId",
-        "pos.name",
+        // "pos.posId",
+        // "pos.name",
 
         "warehouse.warehouseId",
         "warehouse.name",
@@ -79,12 +79,12 @@ class Facturas extends APIBase
 
         "payInOriginalCurrency",
         "SII_transactionType",
-        "SII_serviceType",
+        // "SII_serviceType",
         "referenceType",
         "purchaseOrderNumber",
 
         "deliveryAddress.addressId",
-        "deliveryAddress.description",
+        // "deliveryAddress.description",
         "deliveryAddress.address",
         "deliveryAddress.city",
         "deliveryAddress.county",
@@ -122,18 +122,18 @@ class Facturas extends APIBase
         // "exportData.terms.code",
         // "exportData.terms.description",
 
-        "DTE.trackId",
-        "DTE.documentStatus",
-        "DTE.uploadStatus",
-        "DTE.sentToCustomerAt",
+        // "DTE.trackId",
+        // "DTE.documentStatus",
+        // "DTE.uploadStatus",
+        // "DTE.sentToCustomerAt",
 
-        "references.referenceId",
-        "references.docType.docTypeId",
-        "references.docType.name",
-        "references.code",
-        "references.date",
-        "references.document",
-        "references.description",
+        // "references.referenceId",
+        // "references.docType.docTypeId",
+        // "references.docType.name",
+        // "references.code",
+        // "references.date",
+        // "references.document",
+        // "references.description",
 
         "createdBy.userId",
         "createdBy.name",
@@ -144,9 +144,9 @@ class Facturas extends APIBase
         "modifiedBy.name",
         "modifiedAt",
 
-        "customFields.additionalProp1",
-        "customFields.additionalProp2",
-        "customFields.additionalProp3",
+        // "customFields.additionalProp1",
+        // "customFields.additionalProp2",
+        // "customFields.additionalProp3",
 
         "items.itemId",
         "items.itemOrder",
@@ -156,8 +156,8 @@ class Facturas extends APIBase
         "items.product.description",
         "items.product.unitOfMeasure",
         "items.product.allowFreeDescription",
-        "items.product.allowUserChangePrices",
-        "items.product.applyGeneralVATRate",
+        // "items.product.allowUserChangePrices",
+        // "items.product.applyGeneralVATRate",
         "items.product.maxDiscount",
                 
         "items.itemDescription",
@@ -166,20 +166,20 @@ class Facturas extends APIBase
         "items.currencyCode",
         "items.parityToMainCurrency",
         "items.unitPrice",
-        "items.VAT",
-        "items.VATRate",
+        // "items.VAT",
+        // "items.VATRate",
 
-        "items.taxes.taxId",
-        "items.taxes.taxName",
-        "items.taxes.amount",
+        // "items.taxes.taxId",
+        // "items.taxes.taxName",
+        // "items.taxes.amount",
      
         "items.discountPercentage",
                 
         "items.lot.lot",
         "items.lot.expiration",
                 
-        "items.salesmanCommission",
-        "items.dealerCommission",
+        // "items.salesmanCommission",
+        // "items.dealerCommission",
         "items.noteOfCreditType",
         "items.notInvoiceable",
         "items.notInvoiceable_isIncome",
@@ -195,9 +195,9 @@ class Facturas extends APIBase
         "items.traceFrom.fromStep",
         "items.traceFrom.fromId",
                   
-        "items.customFields.additionalProp1",
-        "items.customFields.additionalProp2",
-        "items.customFields.additionalProp3",
+        // "items.customFields.additionalProp1",
+        // "items.customFields.additionalProp2",
+        // "items.customFields.additionalProp3",
     ];
 
     protected function getEndpoint():string
