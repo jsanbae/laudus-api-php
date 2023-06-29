@@ -3,6 +3,7 @@
 namespace Jsanbae\LaudusAPIPHP\Endpoints\Ventas;
 
 use Jsanbae\LaudusAPIPHP\APIBase;
+use Jsanbae\LaudusAPIPHP\StdResponse;
 
 class Cobros extends APIBase
 {
@@ -33,7 +34,6 @@ class Cobros extends APIBase
         'salesInvoices.docType.docTypeId',
         'salesInvoices.docType.name',
         'salesInvoices.docNumber',
-        'salesInvoices.customer',
         'salesInvoices.customer.customerId',
         'salesInvoices.customer.name',
         'salesInvoices.customer.legalName',
@@ -43,8 +43,8 @@ class Cobros extends APIBase
         'salesInvoices.currencyCode',
         'salesInvoices.parityToMainCurrency',
         'salesInvoices.amount',
-        'salesInvoices.costCenter',
-        'otherDocuments',
+        // 'salesInvoices.costCenter',
+        // 'otherDocuments',
     ];
 
     protected function getEndpoint():string
