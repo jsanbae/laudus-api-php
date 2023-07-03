@@ -22,6 +22,7 @@ class StdResponse
     {
         if ($this->statusCode === 200) $response = $this->successResponse();
         if ($this->statusCode !== 200) $response = $this->errorResponse();
+        if ($this->statusCode >= 500) $response = $this->serverErrorResponse();
 
         return $response;
     }
@@ -53,7 +54,17 @@ class StdResponse
     {
         $responseTemplate = $this->responseTemplate();
         $responseTemplate['status'] = 'error';
-        $responseTemplate['message'] = $this->response['message'];
+        $responseTemplate['message'] = (count($this->response)) ? $this->response['message'] : 'Unknown Error';
+        $responseTemplate['error'] = $this->response;
+
+        return $responseTemplate;
+    }
+    
+    private function serverErrorResponse():array
+    {
+        $responseTemplate = $this->responseTemplate();
+        $responseTemplate['status'] = 'error';
+        $responseTemplate['message'] = 'API Server Error';
         $responseTemplate['error'] = $this->response;
 
         return $responseTemplate;
