@@ -17,6 +17,11 @@ class LaudusAPI
     public function __construct(LaudusCredential $_credential)
     {
         $this->credential = $_credential;
+
+        $getTokenResponse = $this->getToken();
+
+        if ($getTokenResponse['status'] === 'error') throw new \Exception("Error API Connection: " . $getTokenResponse['message'] . "\n");
+
         $this->jwt = $this->getToken()['data'];
     }
 
@@ -40,11 +45,12 @@ class LaudusAPI
 
             //make post
             $response = curl_exec($request);
-
             //respond status code
             $responseStatusCode = curl_getinfo($request, CURLINFO_HTTP_CODE);
+            
+            // close cURL resource, and free up system resources
             curl_close($request); 
-
+            
             $response_decoded = (array) json_decode($response);
 
             return (new StdResponse($response_decoded, $responseStatusCode))();
