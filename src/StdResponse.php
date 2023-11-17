@@ -20,7 +20,7 @@ class StdResponse
 
     private function setResponse():array
     {
-        if ($this->statusCode === 200) $response = $this->successResponse();
+        if (in_array($this->statusCode, [200, 206])) $response = $this->successResponse();
         if ($this->statusCode !== 200) $response = $this->errorResponse();
         if ($this->statusCode >= 500) $response = $this->serverErrorResponse();
 
@@ -42,9 +42,12 @@ class StdResponse
 
     private function successResponse():array
     {
+        if ($this->statusCode === 200) $message = 'OK';
+        if ($this->statusCode === 206) $message = 'Partial Content';
+
         $responseTemplate = $this->responseTemplate();
         $responseTemplate['data'] = $this->response;
-        $responseTemplate['message'] = 'OK';
+        $responseTemplate['message'] = $message;
         $responseTemplate['status'] = 'success';
 
         return $responseTemplate;
@@ -52,9 +55,14 @@ class StdResponse
 
     private function errorResponse():array
     {
+        $message = 'Unknown Error';
+        if ($this->statusCode === 204) $message = 'No Content';
+        if ($this->statusCode === 401) $message = 'Unauthorized';
+        if ($this->statusCode === 400) $message = 'Bad Request';
+
         $responseTemplate = $this->responseTemplate();
         $responseTemplate['status'] = 'error';
-        $responseTemplate['message'] = (count($this->response)) ? $this->response['message'] : 'Unknown Error';
+        $responseTemplate['message'] = (count($this->response)) ? $this->response['message'] : $message;
         $responseTemplate['error'] = $this->response;
 
         return $responseTemplate;

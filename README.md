@@ -33,17 +33,17 @@ $doc_id = 100;
 $data_from_api = $api_client->Compras()->Facturas()->get($doc_id);
 
 //Obtener una lista de facturas de proveedor
-use Jsanbae\LaudusAPIPHP\SettingsList\SettingsList;
-use Jsanbae\LaudusAPIPHP\SettingsList\FilterList;
-use Jsanbae\LaudusAPIPHP\SettingsList\OptionsList;
-use Jsanbae\LaudusAPIPHP\SettingsList\OrderByList;
+use Jsanbae\LaudusAPIPHP\RequestSettings\SettingsList;
+use Jsanbae\LaudusAPIPHP\RequestSettings\FilterList;
+use Jsanbae\LaudusAPIPHP\RequestSettings\OptionsList;
+use Jsanbae\LaudusAPIPHP\RequestSettings\OrderByList;
 
 $doc_number = 100;
 $settingsList = new SettingsList();
 $settingsList->setFields($this->api_client->Compras()->Facturas()->getFields())
-->setOptions(new OptionsList(0, 1))
 ->addFilter(new FilterList("docNumber",  "=", $doc_number))
 ->addOrderBy(new OrderByList('docNumber', 'DESC'))
+->paginate(0, 1)
 ;
 
 $data_from_api = $this->api_client->Compras()->Facturas()->list($settingsList);

@@ -1,6 +1,6 @@
 <?php
 
-namespace Jsanbae\LaudusAPIPHP\SettingsList;
+namespace Jsanbae\LaudusAPIPHP\RequestSettings;
 
 class OptionsList
 {

@@ -24,4 +24,9 @@ class Proveedores extends APIBase
     {
         return 'https://api.laudus.cl/purchases/suppliers/list';
     }
+
+    protected function createEndpoint():string
+    {
+        return 'https://api.laudus.cl/purchases/suppliers/';
+    }
 }

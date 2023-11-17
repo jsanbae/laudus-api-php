@@ -19,6 +19,13 @@ class Pagos extends APIBase
         'accountOther.accountNumber', 
         'accountOther.name', 
         'createAccounting', 
+        'journalEntryIssued.journalEntryId',
+        'journalEntryIssued.journalEntryNumber',
+        'journalEntryIssued.type',
+        'journalEntryDeposited.journalEntryId',
+        'journalEntryDeposited.journalEntryNumber',
+        'journalEntryDeposited.type',
+        'notes',
         'purchaseInvoices.itemId', 
         'purchaseInvoices.purchaseInvoiceId', 
         'purchaseInvoices.docType.docTypeId', 
@@ -34,6 +41,24 @@ class Pagos extends APIBase
         'purchaseInvoices.amount',
         'purchaseInvoices.costCenter.costCenterId',
         'purchaseInvoices.costCenter.name',
+        'otherDocuments.itemId',
+        'otherDocuments.document',
+        'otherDocuments.description',
+        'otherDocuments.relatedTo.relatedId',
+        'otherDocuments.relatedTo.type',
+        'otherDocuments.relatedTo.name',
+        'otherDocuments.relatedTo.vatId',
+        'otherDocuments.account.accountId',
+        'otherDocuments.account.accountNumber',
+        'otherDocuments.account.name',
+        'otherDocuments.category.code',
+        'otherDocuments.category.description',
+        'otherDocuments.originalAmount',
+        'otherDocuments.currencyCode',
+        'otherDocuments.parityToMainCurrency',
+        'otherDocuments.amount',
+        'otherDocuments.costCenter.costCenterId',
+        'otherDocuments.costCenter.name',
     ];
 
     protected function getEndpoint():string
@@ -46,34 +71,9 @@ class Pagos extends APIBase
         return 'https://api.laudus.cl/purchases/payments/list';
     }
 
-    public function Pagar(array $_pago):array
+    public function createEndpoint():string
     {
-        try {
-
-            $request = curl_init('https://api.laudus.cl/purchases/payments'); 
-            curl_setopt($request, CURLOPT_SSL_VERIFYPEER, false);
-            curl_setopt($request, CURLOPT_CUSTOMREQUEST, "POST");
-            curl_setopt($request, CURLOPT_POSTFIELDS, json_encode($_pago));
-            curl_setopt($request, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($request, CURLOPT_HTTPHEADER, array(
-                "Accept: application/json",
-                "Content-Type: application/json",
-                "Authorization: Bearer " . $this->token)
-            );
-
-            //make POST
-            $response = curl_exec($request);
-            //respond status code
-            $responseStatusCode = curl_getinfo($request, CURLINFO_HTTP_CODE);
-            curl_close($request);
-
-            $response_decoded = (array) json_decode($response);
-
-            return (new StdResponse($response_decoded, $responseStatusCode))();
-            
-        } catch (\Throwable $t) {
-            throw new \Exception("Error API Connection: " . $t->getMessage() . "\n");
-        }
+        return 'https://api.laudus.cl/purchases/payments/';
     }
-
+    
 }

@@ -3,10 +3,13 @@
 namespace Jsanbae\LaudusAPIPHP;
 
 use Jsanbae\LaudusAPIPHP\StdResponse;
+use Jsanbae\LaudusAPIPHP\Credentials\LaudusCredential;
 use Jsanbae\LaudusAPIPHP\Endpoints\Compras;
 use Jsanbae\LaudusAPIPHP\Endpoints\Cuentas;
+use Jsanbae\LaudusAPIPHP\Endpoints\Mayor;
 use Jsanbae\LaudusAPIPHP\Endpoints\Ventas;
-use Jsanbae\LaudusAPIPHP\Credentials\LaudusCredential;
+use Jsanbae\LaudusAPIPHP\Endpoints\Comprobante;
+use Jsanbae\LaudusAPIPHP\Endpoints\System;
 
 class LaudusAPI
 {
@@ -96,6 +99,26 @@ class LaudusAPI
         $jwt = $this->reValidatedToken();
 
         return new Ventas($jwt);
+    }
+
+    public function Mayor():Mayor
+    {
+        $jwt = $this->reValidatedToken();
+
+        return new Mayor($jwt);
+    }
+    public function Comprobante():Comprobante
+    {
+        $jwt = $this->reValidatedToken();
+
+        return new Comprobante($jwt);
+    }
+
+    public function System():System
+    {
+        $jwt = $this->reValidatedToken();
+
+        return new System($jwt);
     }
 
 }

@@ -36,4 +36,9 @@ class Bancarias extends APIBase
         return 'https://api.laudus.cl/accounting/banks/list';
     }
 
+    protected function createEndpoint():string
+    {
+        return 'https://api.laudus.cl/accounting/banks/';
+    }
+
 }

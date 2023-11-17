@@ -210,6 +210,9 @@ class Facturas extends APIBase
         return 'https://api.laudus.cl/sales/invoices/list';
     }
 
-
+    protected function createEndpoint():string
+    {
+        return 'https://api.laudus.cl/sales/invoices';
+    }
 
 }

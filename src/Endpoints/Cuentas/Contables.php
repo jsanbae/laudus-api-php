@@ -25,4 +25,9 @@ class Contables extends APIBase
     {
         return 'https://api.laudus.cl/accounting/accounts/list';
     }
+
+    protected function createEndpoint():string
+    {
+        return 'https://api.laudus.cl/accounting/accounts/';
+    }
 }

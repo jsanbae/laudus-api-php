@@ -1,12 +1,13 @@
 <?php
 
-namespace Jsanbae\LaudusAPIPHP\SettingsList;
+namespace Jsanbae\LaudusAPIPHP\RequestSettings;
 
-use Jsanbae\LaudusAPIPHP\SettingsList\FilterList;
-use Jsanbae\LaudusAPIPHP\SettingsList\OrderByList;
-use Jsanbae\LaudusAPIPHP\SettingsList\OptionsList;
+use Jsanbae\LaudusAPIPHP\RequestSettings\FilterList;
+use Jsanbae\LaudusAPIPHP\RequestSettings\OrderByList;
+use Jsanbae\LaudusAPIPHP\RequestSettings\OptionsList;
+use Jsanbae\LaudusAPIPHP\RequestSettings\RequestSettings;
 
-class SettingsList
+class SettingsList implements RequestSettings
 {
 
     private $fields;
@@ -22,7 +23,7 @@ class SettingsList
         $this->options = [];
     }
 
-    public function addFilter(FilterList $_filter)
+    public function addFilter(FilterList $_filter):self
     {
         if (!in_array($_filter->getField(), $this->fields)) throw new \Exception("Can't filter by Field that not found in fields list");
 
@@ -31,14 +32,14 @@ class SettingsList
         return $this;
     }
 
-    public function setFields(array $_fields)
+    public function setFields(array $_fields):self
     {
         $this->fields = $_fields;
 
         return $this;
     }
 
-    public function addOrderBy(OrderByList $_orderBy)
+    public function addOrderBy(OrderByList $_orderBy):self
     {
         if (!in_array($_orderBy->getField(), $this->fields)) throw new \Exception("Can't order by Field that not found in fields list");
 
@@ -46,11 +47,11 @@ class SettingsList
 
         return $this;
     }
-    
-    public function setOptions(OptionsList $_options)
+
+    public function paginate(int $_offset, int $_limit):self
     {
-        $this->options = $_options;
-        
+        $this->options = new OptionsList($_offset, $_limit);
+
         return $this;
     }
 
@@ -66,7 +67,7 @@ class SettingsList
                 $filters[] = $filter->toArray();
                 return $filters;
             }, []),
-            'options' => $this->options->toArray()
+            'options' => (empty($this->options)) ? [] : $this->options->toArray()
         ];
     }
 }

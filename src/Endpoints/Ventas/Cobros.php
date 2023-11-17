@@ -57,6 +57,11 @@ class Cobros extends APIBase
         return 'https://api.laudus.cl/sales/receipts/list';
     }
 
+    protected function createEndpoint():string
+    {
+        return 'https://api.laudus.cl/sales/receipts';
+    }
+
     public function Cobrar(array $_cobro):array
     {
         try {
