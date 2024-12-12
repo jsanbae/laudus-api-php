@@ -65,4 +65,9 @@ class Comprobante extends APIBase
         return 'https://api.laudus.cl/accounting/journal/entries/';
     }
 
+    protected function deleteEndpoint():string
+    {
+        return 'https://api.laudus.cl/accounting/journal/entries/';
+    }
+
 }

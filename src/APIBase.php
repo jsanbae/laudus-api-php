@@ -113,4 +113,32 @@ abstract class APIBase
             throw new \Exception("Error API Connection: " . $t->getMessage() . "\n");
         }
     }
+
+    public function delete(string $_resource_id):array
+    {
+        try {
+            $request = curl_init($this->deleteEndpoint() . $_resource_id);
+            curl_setopt($request, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($request, CURLOPT_CUSTOMREQUEST, "DELETE");
+            curl_setopt($request, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($request, CURLOPT_HTTPHEADER, array(
+                "Accept: application/json",
+                "Content-Type: application/json",
+                "Authorization: Bearer " . $this->token)
+            );
+
+            //make request
+            $response = curl_exec($request);    
+            //respond status code
+            $responseStatusCode = curl_getinfo($request, CURLINFO_HTTP_CODE);
+            curl_close($request);
+
+            $response_decoded = (array) json_decode($response);
+
+            return (new StdResponse($response_decoded, $responseStatusCode))();
+                
+        } catch (\Throwable $t) {
+            throw new \Exception("Error API Connection: " . $t->getMessage() . "\n");
+        }
+    }
 }
