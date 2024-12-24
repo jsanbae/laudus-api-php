@@ -4,6 +4,7 @@ namespace Jsanbae\LaudusAPIPHP;
 
 use Jsanbae\LaudusAPIPHP\StdResponse;
 use Jsanbae\LaudusAPIPHP\Credentials\LaudusCredential;
+use Jsanbae\LaudusAPIPHP\Endpoints\CentrosCostos;
 use Jsanbae\LaudusAPIPHP\Endpoints\Compras;
 use Jsanbae\LaudusAPIPHP\Endpoints\Cuentas;
 use Jsanbae\LaudusAPIPHP\Endpoints\Mayor;
@@ -112,6 +113,13 @@ class LaudusAPI
         $jwt = $this->reValidatedToken();
 
         return new Comprobante($jwt);
+    }
+
+    public function CentrosCostos(): CentrosCostos 
+    {
+        $jwt = $this->reValidatedToken();
+
+        return new CentrosCostos($jwt);
     }
 
     public function System():System

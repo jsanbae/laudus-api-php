@@ -90,6 +90,29 @@ class MockData {
         ];
     }
 
+    public function centros_costos() : array 
+    {
+        return [
+            "costCenterId" => "001",
+            "name" => "IQUIQUE",
+            "discontinued" => false,
+            "fullPath" => "\IQUIQUE",
+            "parentId" =>"",
+            "code" => "",
+            "notes" => "",
+            "createdBy" => [
+                "userId" => "01",
+                "name" => "Administrador",
+            ],
+            "createdAt" => "14/12/2021 17:02:39",
+            "modifiedBy" => [
+                "userId" => "",
+                "name" => "",
+            ],
+            "modifiedAt" => "" 
+        ];
+    }
+
     public function ventas()
     {
         return [
