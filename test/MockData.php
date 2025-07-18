@@ -127,4 +127,11 @@ class MockData {
         ];
     }
 
+    public function productos()
+    {
+        return [
+            'product_id' => 1,
+        ];
+    }
+
 }

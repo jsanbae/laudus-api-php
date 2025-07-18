@@ -6,11 +6,12 @@ use Jsanbae\LaudusAPIPHP\StdResponse;
 use Jsanbae\LaudusAPIPHP\Credentials\LaudusCredential;
 use Jsanbae\LaudusAPIPHP\Endpoints\CentrosCostos;
 use Jsanbae\LaudusAPIPHP\Endpoints\Compras;
+use Jsanbae\LaudusAPIPHP\Endpoints\Comprobante;
 use Jsanbae\LaudusAPIPHP\Endpoints\Cuentas;
 use Jsanbae\LaudusAPIPHP\Endpoints\Mayor;
-use Jsanbae\LaudusAPIPHP\Endpoints\Ventas;
-use Jsanbae\LaudusAPIPHP\Endpoints\Comprobante;
+use Jsanbae\LaudusAPIPHP\Endpoints\Productos;
 use Jsanbae\LaudusAPIPHP\Endpoints\System;
+use Jsanbae\LaudusAPIPHP\Endpoints\Ventas;
 
 class LaudusAPI
 {
@@ -127,6 +128,13 @@ class LaudusAPI
         $jwt = $this->reValidatedToken();
 
         return new System($jwt);
+    }
+
+    public function Productos():Productos
+    {
+        $jwt = $this->reValidatedToken();
+
+        return new Productos($jwt);
     }
 
 }
