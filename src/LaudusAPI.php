@@ -10,6 +10,7 @@ use Jsanbae\LaudusAPIPHP\Endpoints\Comprobante;
 use Jsanbae\LaudusAPIPHP\Endpoints\Cuentas;
 use Jsanbae\LaudusAPIPHP\Endpoints\Mayor;
 use Jsanbae\LaudusAPIPHP\Endpoints\Productos;
+use Jsanbae\LaudusAPIPHP\Endpoints\Remuneracion;
 use Jsanbae\LaudusAPIPHP\Endpoints\System;
 use Jsanbae\LaudusAPIPHP\Endpoints\Ventas;
 
@@ -31,7 +32,7 @@ class LaudusAPI
     }
 
     //obtiene un token realizando un request a la API
-    public function getToken():array
+    public function getToken(): array
     {
         //esquema de request Login
         $requestBodyJson = json_encode($this->credential->get());
@@ -67,7 +68,7 @@ class LaudusAPI
 
     //indica si el token almacenado en el objeto credential es válido
     //si el token almacenado no es válido obtiene un nuevo token e igualmente indica su validez
-    public function isValidToken($token):bool
+    public function isValidToken($token): bool
     {
         $ltNow = new \DateTimeImmutable();
         $ltNow = $ltNow->format('c');
@@ -77,39 +78,39 @@ class LaudusAPI
         return false;
     }
 
-    private function reValidatedToken():string
+    private function reValidatedToken(): string
     {
         return (!$this->isValidToken($this->jwt)) ? $this->getToken()['token'] : $this->jwt['token'];
     }
 
-    public function Cuentas():Cuentas
+    public function Cuentas(): Cuentas
     {
         $jwt = $this->reValidatedToken();
 
         return new Cuentas($jwt);
     }
 
-    public function Compras():Compras
+    public function Compras(): Compras
     {
         $jwt = $this->reValidatedToken();
 
         return new Compras($jwt);
     }
     
-    public function Ventas():Ventas
+    public function Ventas(): Ventas
     {
         $jwt = $this->reValidatedToken();
 
         return new Ventas($jwt);
     }
 
-    public function Mayor():Mayor
+    public function Mayor(): Mayor
     {
         $jwt = $this->reValidatedToken();
 
         return new Mayor($jwt);
     }
-    public function Comprobante():Comprobante
+    public function Comprobante(): Comprobante
     {
         $jwt = $this->reValidatedToken();
 
@@ -123,18 +124,25 @@ class LaudusAPI
         return new CentrosCostos($jwt);
     }
 
-    public function System():System
+    public function System(): System
     {
         $jwt = $this->reValidatedToken();
 
         return new System($jwt);
     }
 
-    public function Productos():Productos
+    public function Productos(): Productos
     {
         $jwt = $this->reValidatedToken();
 
         return new Productos($jwt);
+    }
+
+    public function Remuneracion(): Remuneracion
+    {
+        $jwt = $this->reValidatedToken();
+
+        return new Remuneracion($jwt);
     }
 
 }

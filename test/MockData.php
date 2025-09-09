@@ -134,4 +134,12 @@ class MockData {
         ];
     }
 
+    public function remuneracion()
+    {
+        return [
+            'payroll_id' => "01",
+            'employee_id' => 408,
+        ];
+    }
+
 }
