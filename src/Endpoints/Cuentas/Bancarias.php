@@ -26,19 +26,24 @@ class Bancarias extends APIBase
         'modifiedAt'
     ];
 
-    protected function getEndpoint():string
+    protected function getEndpoint(): string
     {
         return 'https://api.laudus.cl/accounting/banks/';
     }
     
-    protected function listEndpoint():string
+    protected function listEndpoint(): string
     {
         return 'https://api.laudus.cl/accounting/banks/list';
     }
 
-    protected function createEndpoint():string
+    protected function createEndpoint(): string
     {
         return 'https://api.laudus.cl/accounting/banks/';
+    }
+
+    protected function deleteEndpoint(): string
+    {
+        return '';
     }
 
 }

@@ -32,4 +32,9 @@ class LibroRemuneracion extends APIBase
         return '';
     }
 
+    protected function deleteEndpoint(): string
+    {
+        return '';
+    }
+
 }

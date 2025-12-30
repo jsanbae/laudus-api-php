@@ -50,24 +50,24 @@ class Comprobante extends APIBase
         parent::__construct($_token);
     }
 
-    protected function getEndpoint():string
+    protected function getEndpoint(): string
     {
         return 'https://api.laudus.cl/accounting/journal/entries/';
     }
 
-    protected function listEndpoint():string
+    protected function listEndpoint(): string
     {
         return 'https://api.laudus.cl/accounting/journal/entries/list';
     }
 
-    protected function createEndpoint():string
+    protected function createEndpoint(): string
     {
         return 'https://api.laudus.cl/accounting/journal/entries/';
     }
 
-    protected function deleteEndpoint():string
+    protected function deleteEndpoint(): string
     {
-        return 'https://api.laudus.cl/accounting/journal/entries/';
+        return '';
     }
 
 }

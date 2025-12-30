@@ -200,19 +200,24 @@ class Facturas extends APIBase
         // "items.customFields.additionalProp3",
     ];
 
-    protected function getEndpoint():string
+    protected function getEndpoint(): string
     {
         return 'https://api.laudus.cl/sales/invoices/';
     }
     
-    protected function listEndpoint():string
+    protected function listEndpoint(): string
     {
         return 'https://api.laudus.cl/sales/invoices/list';
     }
 
-    protected function createEndpoint():string
+    protected function createEndpoint(): string
     {
         return 'https://api.laudus.cl/sales/invoices';
+    }
+
+    protected function deleteEndpoint(): string
+    {
+        return '';
     }
 
 }

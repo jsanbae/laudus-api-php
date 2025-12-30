@@ -12,17 +12,22 @@ class CodesCategory extends APIBase
         'description',
     ];
 
-    protected function getEndpoint():string
+    protected function getEndpoint(): string
     {
         return '';
     }
     
-    protected function listEndpoint():string
+    protected function listEndpoint(): string
     {
         return 'https://api.laudus.cl/system/codes/category/list';
     }
 
-    protected function createEndpoint():string
+    protected function createEndpoint(): string
+    {
+        return '';
+    }
+
+    protected function deleteEndpoint(): string
     {
         return '';
     }

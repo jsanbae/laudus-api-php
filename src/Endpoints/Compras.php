@@ -16,17 +16,17 @@ class Compras
         $this->token = $_token;
     }
 
-    public function Facturas():APIBase
+    public function Facturas(): APIBase
     {
         return new Facturas($this->token);
     }
 
-    public function Proveedores():APIBase
+    public function Proveedores(): APIBase
     {
         return new Proveedores($this->token);
     }
 
-    public function Pagos():APIBase
+    public function Pagos(): APIBase
     {
         return new Pagos($this->token);
     }

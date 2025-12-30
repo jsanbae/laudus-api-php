@@ -38,17 +38,22 @@ class Mayor extends APIBase
         return '';
     }
 
-    protected function listEndpoint():string
+    protected function listEndpoint(): string
     {
         return 'https://api.laudus.cl/accounting/ledger';
     }
 
-    protected function createEndpoint():string
+    protected function createEndpoint(): string
     {
         return '';
     }
 
-    public function all(SettingsMayorList $_options):array
+    protected function deleteEndpoint(): string
+    {
+        return '';
+    }
+
+    public function all(SettingsMayorList $_options): array
     {
         try {
             

@@ -41,4 +41,9 @@ class CentrosCostos extends APIBase
     {
         return 'https://api.laudus.cl/purchases/costcenters/list';
     }
+
+    protected function deleteEndpoint(): string
+    {
+        return '';
+    }
 }

@@ -14,12 +14,13 @@ abstract class APIBase
         $this->token = $_token;
     }
 
-    abstract protected function getEndpoint():string;
+    abstract protected function getEndpoint(): string;
     
-    abstract protected function listEndpoint():string;
+    abstract protected function listEndpoint(): string;
 
-    abstract protected function createEndpoint():string;
+    abstract protected function createEndpoint(): string;
     
+    abstract protected function deleteEndpoint(): string;
 
     public function getFields():array
     {

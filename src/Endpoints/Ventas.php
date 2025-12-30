@@ -15,12 +15,12 @@ class Ventas
         $this->token = $_token;
     }
 
-    public function Cobros():APIBase
+    public function Cobros(): APIBase
     {
         return new Cobros($this->token);
     }
 
-    public function Facturas():APIBase
+    public function Facturas(): APIBase
     {
         return new Facturas($this->token);
     }

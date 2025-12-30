@@ -19,19 +19,23 @@ class Codes extends APIBase
         'metadata'
     ];
 
-    protected function getEndpoint():string
+    protected function getEndpoint(): string
     {
         return 'https://api.laudus.cl/system/codes/';
     }
     
-    protected function listEndpoint():string
+    protected function listEndpoint(): string
     {
         return 'https://api.laudus.cl/system/codes/list';
     }
 
-    protected function createEndpoint():string
+    protected function createEndpoint(): string
     {
         return 'https://api.laudus.cl/system/codes/';
     }
 
+    protected function deleteEndpoint(): string
+    {
+        return '';
+    }
 }

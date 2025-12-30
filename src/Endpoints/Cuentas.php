@@ -15,12 +15,12 @@ class Cuentas
         $this->token = $_token;
     }
 
-    public function Bancarias():APIBase
+    public function Bancarias(): APIBase
     {
         return new Bancarias($this->token);
     }
 
-    public function Contables():APIBase
+    public function Contables(): APIBase
     {
         return new Contables($this->token);
     } 

@@ -67,23 +67,28 @@ class Productos extends APIBase
         parent::__construct($_token);
     }
 
-    protected function getEndpoint():string
+    protected function getEndpoint(): string
     {
         return '';
     }
 
-    protected function listEndpoint():string
+    protected function listEndpoint(): string
     {
         return 'https://api.laudus.cl/production/products/list';
     }
 
-    protected function createEndpoint():string
+    protected function createEndpoint(): string
+    {
+        return '';
+    }
+
+    protected function deleteEndpoint(): string
     {
         return '';
     }
 
 
-    public function getStock():array
+    public function getStock(): array
     {
         try {
             $endpoint_url = "https://api.laudus.cl/production/products/stock";
@@ -115,7 +120,7 @@ class Productos extends APIBase
     public function getStockByProductId(string $_productId):array
     {
         try {
-            $endpoint_url = "https://api.laudus.cl/production/products/".$productId."/stock";
+            $endpoint_url = "https://api.laudus.cl/production/products/".$_productId."/stock";
 
             $request = curl_init($endpoint_url);
             curl_setopt($request, CURLOPT_SSL_VERIFYPEER, false);

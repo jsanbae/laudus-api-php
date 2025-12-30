@@ -61,19 +61,24 @@ class Pagos extends APIBase
         'otherDocuments.costCenter.name',
     ];
 
-    protected function getEndpoint():string
+    protected function getEndpoint(): string
     {
         return 'https://api.laudus.cl/purchases/payments/';
     }
 
-    protected function listEndpoint():string
+    protected function listEndpoint(): string
     {
         return 'https://api.laudus.cl/purchases/payments/list';
     }
 
-    public function createEndpoint():string
+    public function createEndpoint(): string
     {
         return 'https://api.laudus.cl/purchases/payments/';
+    }
+
+    protected function deleteEndpoint(): string
+    {
+        return '';
     }
     
 }
