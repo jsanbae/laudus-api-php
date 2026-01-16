@@ -67,7 +67,7 @@ class Comprobante extends APIBase
 
     protected function deleteEndpoint(): string
     {
-        return '';
+        return 'https://api.laudus.cl/accounting/journal/entries/';
     }
 
 }
