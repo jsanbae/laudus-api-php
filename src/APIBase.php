@@ -63,7 +63,7 @@ abstract class APIBase
             curl_setopt($request, CURLOPT_HTTPHEADER, $headers);
 
             $curlCommand = $this->generateCurlCommand($this->listEndpoint(), "POST", $headers, $settings);
-            fwrite(STDERR, "API Base - Comando LIST cURL:\n" . $curlCommand);
+            file_put_contents('php://stderr', "API Base - Comando LIST cURL:\n" . $curlCommand);
 
             //make request
             $response = curl_exec($request);
@@ -74,7 +74,7 @@ abstract class APIBase
 
             // rewind($verbose);
             // $verboseLog = stream_get_contents($verbose);
-            // fwrite(STDERR, "API Base - Log de depuración:\n" . htmlspecialchars($verboseLog));
+            // file_put_contents('php://stderr', "API Base - Log de depuración:\n" . htmlspecialchars($verboseLog));
 
             return (new StdResponse($response_decoded, $responseStatusCode))();
             
@@ -105,7 +105,7 @@ abstract class APIBase
             curl_setopt($request, CURLOPT_HTTPHEADER, $headers);
 
             $curlCommand = $this->generateCurlCommand($this->getEndpoint() . $_resource_id, "GET", $headers);
-            fwrite(STDERR, "API Base - Comando GET cURL:\n" . $curlCommand);
+            file_put_contents('php://stderr', "API Base - Comando GET cURL:\n" . $curlCommand);
 
             //make request
             $response = curl_exec($request);    
@@ -148,7 +148,7 @@ abstract class APIBase
             curl_setopt($request, CURLOPT_HTTPHEADER, $headers);
 
             $curlCommand = $this->generateCurlCommand($this->createEndpoint(), "POST", $headers, $body);
-            fwrite(STDERR, "API Base - Comando CREATE cURL:\n" . $curlCommand);
+            file_put_contents('php://stderr', "API Base - Comando CREATE cURL:\n" . $curlCommand);
 
             //make request
             $response = curl_exec($request);
@@ -185,7 +185,7 @@ abstract class APIBase
             curl_setopt($request, CURLOPT_HTTPHEADER, $headers);
 
             $curlCommand = $this->generateCurlCommand($this->deleteEndpoint() . $_resource_id, "DELETE", $headers);
-            fwrite(STDERR, "API Base - Comando DELETE cURL:\n" . $curlCommand);
+            file_put_contents('php://stderr', "API Base - Comando DELETE cURL:\n" . $curlCommand);
 
             //make request
             $response = curl_exec($request);    
