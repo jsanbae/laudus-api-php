@@ -80,7 +80,7 @@ class LaudusAPI
 
     private function reValidatedToken(): string
     {
-        return (!$this->isValidToken($this->jwt)) ? $this->getToken()['data'] : $this->jwt['data'];
+        return (!$this->isValidToken($this->jwt)) ? $this->getToken()['data'] : $this->jwt;
     }
 
     public function Cuentas(): Cuentas
