@@ -68,7 +68,7 @@ class LaudusAPI
 
     //indica si el token almacenado en el objeto credential es válido
     //si el token almacenado no es válido obtiene un nuevo token e igualmente indica su validez
-    public function isValidToken($token): bool
+    public function isValidToken(array $token): bool
     {
         $ltNow = new \DateTimeImmutable();
         $ltNow = $ltNow->format('c');
@@ -78,69 +78,69 @@ class LaudusAPI
         return false;
     }
 
-    private function reValidatedToken(): string
+    private function reValidatedToken(): array
     {
         return (!$this->isValidToken($this->jwt)) ? $this->getToken()['data'] : $this->jwt;
     }
 
     public function Cuentas(): Cuentas
     {
-        $jwt = $this->reValidatedToken();
+        $jwt = $this->reValidatedToken()['token'];
 
         return new Cuentas($jwt);
     }
 
     public function Compras(): Compras
     {
-        $jwt = $this->reValidatedToken();
+        $jwt = $this->reValidatedToken()['token'];
 
         return new Compras($jwt);
     }
     
     public function Ventas(): Ventas
     {
-        $jwt = $this->reValidatedToken();
+        $jwt = $this->reValidatedToken()['token'];
 
         return new Ventas($jwt);
     }
 
     public function Mayor(): Mayor
     {
-        $jwt = $this->reValidatedToken();
+        $jwt = $this->reValidatedToken()['token'];
 
         return new Mayor($jwt);
     }
     public function Comprobante(): Comprobante
     {
-        $jwt = $this->reValidatedToken();
+        $jwt = $this->reValidatedToken()['token'];
 
         return new Comprobante($jwt);
     }
 
     public function CentrosCostos(): CentrosCostos 
     {
-        $jwt = $this->reValidatedToken();
+        $jwt = $this->reValidatedToken()['token'];
 
         return new CentrosCostos($jwt);
     }
 
     public function System(): System
     {
-        $jwt = $this->reValidatedToken();
+        $jwt = $this->reValidatedToken()['token'];
 
         return new System($jwt);
     }
 
     public function Productos(): Productos
     {
-        $jwt = $this->reValidatedToken();
+        $jwt = $this->reValidatedToken()['token'];
 
         return new Productos($jwt);
     }
 
     public function Remuneracion(): Remuneracion
     {
-        $jwt = $this->reValidatedToken();
+        $jwt = $this->reValidatedToken()['token'];
 
         return new Remuneracion($jwt);
     }
