@@ -33,6 +33,8 @@ class Facturas extends APIBase
         "totalsOriginalCurrency.total",
         "totalsOriginalCurrency.currencyCode",
         "totalsOriginalCurrency.parity",
+        // "VATDeduction.deductible",
+        // "VATDeduction.type",
         "payInOriginalCurrency",
         "createAccounting",
         "references.description",
@@ -63,6 +65,8 @@ class Facturas extends APIBase
         // "items.account.accountId",
         // "items.account.accountNumber",
         // "items.account.name"
+        "journalEntry.journalEntryId",
+        "journalEntry.journalEntryNumber",
     ];
 
     protected function getEndpoint(): string
