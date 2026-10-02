@@ -22,6 +22,11 @@ abstract class APIBase
     
     abstract protected function deleteEndpoint(): string;
 
+    protected function updateEndpoint(): string
+    {
+        return '';
+    }
+
     /**
      * Get the fields for the API
      * 
@@ -149,6 +154,48 @@ abstract class APIBase
 
             $curlCommand = $this->generateCurlCommand($this->createEndpoint(), "POST", $headers, $body);
             file_put_contents('php://stderr', "API Base - Comando CREATE cURL:\n" . $curlCommand);
+
+            //make request
+            $response = curl_exec($request);
+            //respond status code
+            $responseStatusCode = curl_getinfo($request, CURLINFO_HTTP_CODE);
+            curl_close($request);
+            $response_decoded = (array) json_decode($response);
+            return (new StdResponse($response_decoded, $responseStatusCode))();
+            
+        } catch (\Throwable $t) {
+            throw new \Exception("Error API Connection: " . $t->getMessage() . "\n");
+        }
+    }
+
+    /**
+     * Update a resource in the API
+     * 
+     * @param string $_resource_id
+     * @param array $_body
+     * @return array
+     */
+    public function update(string $_resource_id, array $_body): array
+    {
+        try {
+            $body = json_encode($_body);
+
+            $headers = [
+                "Accept: application/json",
+                "Content-Type: application/json",
+                "Content-Length: " . strlen($body),
+                "Authorization: Bearer " . $this->token
+            ];
+
+            $request = curl_init($this->updateEndpoint() . $_resource_id); 
+            curl_setopt($request, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($request, CURLOPT_CUSTOMREQUEST, "PUT");
+            curl_setopt($request, CURLOPT_POSTFIELDS, $body);
+            curl_setopt($request, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($request, CURLOPT_HTTPHEADER, $headers);
+
+            $curlCommand = $this->generateCurlCommand($this->updateEndpoint() . $_resource_id, "PUT", $headers, $body);
+            file_put_contents('php://stderr', "API Base - Comando UPDATE cURL:\n" . $curlCommand);
 
             //make request
             $response = curl_exec($request);

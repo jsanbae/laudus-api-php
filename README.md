@@ -75,6 +75,9 @@ Cuenta con unos pocos, se irán agregando en la medida que los vaya necesitando.
 - Listar Facturas (Filtrable)
 - Obtener Cliente por ID
 - Listar Clientes (Filtrable)
+- Crear Cliente
+- Modificar Cliente
+- Eliminar Cliente
 - Obtener Cobro por ID
 - Listar Cobros (Filtrable)
 - Realizar Cobro

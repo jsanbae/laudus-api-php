@@ -124,6 +124,14 @@ class MockData {
                 'doc_number' => 492,
                 'customer_vatID' => '76.123.456-2',
             ],
+            'clientes' => [
+                'customer_id' => 1,
+                'cliente_new' => [
+                    "name" => "GONZALO JOSE QUEZADA ROSS",
+                    "legalName" => "GONZALO JOSE QUEZADA ROSS",
+                    "VATId" => "6.286.477-K",
+                ],
+            ],
         ];
     }
 

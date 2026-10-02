@@ -64,4 +64,64 @@ class VentasTest extends TestCase
 
         $this->assertEquals($api_response['data'][0]->docNumber, $doc_number, "Can't retrieve Pagos from API");
     }
+
+    public function test_ventas_clientes_get()
+    {
+        $customer_id = $this->mock_data->ventas()['clientes']['customer_id'];
+
+        $api_response = $this->api_client->Ventas()->Clientes()->get($customer_id);
+
+        $this->assertEquals($api_response['data']['customerId'], $customer_id, "Couldn't retrieve Cliente from API");
+    }
+
+    public function test_ventas_clientes_list()
+    {
+        $customer_id = $this->mock_data->ventas()['clientes']['customer_id'];
+
+        $settingsList = (new SettingsList())
+        ->setFields($this->api_client->Ventas()->Clientes()->getFields())
+        ->addFilter(new FilterList("customerId",  "=", $customer_id))
+        ->addOrderBy(new OrderByList('customerId', 'DESC'))
+        ->paginate(0, 1)
+        ;
+
+        $api_response = $this->api_client->Ventas()->Clientes()->list($settingsList);
+
+        $this->assertEquals($api_response['data'][0]->customerId, $customer_id, "Couldn't retrieve Clientes from API");
+    }
+
+    public function test_ventas_clientes_create()
+    {
+        $this->markTestSkipped('Test de Crear Cliente has been skipped.');
+
+        $cliente_new = $this->mock_data->ventas()['clientes']['cliente_new'];
+
+        $api_response = $this->api_client->Ventas()->Clientes()->create($cliente_new);
+
+        $this->assertNotNull($api_response['data']['customerId'], "Couldn't create Cliente from API");
+    }
+
+    public function test_ventas_clientes_update()
+    {
+        $this->markTestSkipped('Test de Modificar Cliente has been skipped.');
+
+        $customer_id = $this->mock_data->ventas()['clientes']['customer_id'];
+        $cliente = $this->api_client->Ventas()->Clientes()->get($customer_id)['data'];
+        $cliente['notes'] = 'Modificado desde test';
+
+        $api_response = $this->api_client->Ventas()->Clientes()->update($customer_id, $cliente);
+
+        $this->assertEquals($api_response['data']['notes'], 'Modificado desde test', "Couldn't update Cliente from API");
+    }
+
+    public function test_ventas_clientes_delete()
+    {
+        $this->markTestSkipped('Test de Eliminar Cliente has been skipped.');
+
+        $customer_id = $this->mock_data->ventas()['clientes']['customer_id'];
+
+        $api_response = $this->api_client->Ventas()->Clientes()->delete($customer_id);
+
+        $this->assertEquals('success', $api_response['status'], "Couldn't delete Cliente from API");
+    }
 }
