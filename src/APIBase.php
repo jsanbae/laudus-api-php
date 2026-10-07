@@ -7,11 +7,16 @@ use Jsanbae\LaudusAPIPHP\RequestSettings\RequestSettings;
 abstract class APIBase
 {
     protected $token;
+
+    /** @var callable|null */
+    protected $refreshToken;
+
     protected $fields = [];
 
-    public function __construct(string $_token)
+    public function __construct(string $_token, ?callable $refreshToken = null)
     {
         $this->token = $_token;
+        $this->refreshToken = $refreshToken;
     }
 
     abstract protected function getEndpoint(): string;
@@ -47,45 +52,9 @@ abstract class APIBase
      */
     public function list(RequestSettings $_settings): array
     {
-        try {
-            $settings = json_encode($_settings->toArray());
-            
-            $headers = [
-                "Accept: application/json",
-                "Content-Type: application/json",
-                "Content-Length: " . strlen($settings),
-                "Authorization: Bearer " . $this->token
-            ];
+        $settings = json_encode($_settings->toArray());
 
-            $request = curl_init($this->listEndpoint()); 
-            curl_setopt($request, CURLOPT_VERBOSE, true);
-            $verbose = fopen('php://temp', 'w+');
-            curl_setopt($request, CURLOPT_STDERR, $verbose);
-            curl_setopt($request, CURLOPT_SSL_VERIFYPEER, false);
-            curl_setopt($request, CURLOPT_CUSTOMREQUEST, "POST");
-            curl_setopt($request, CURLOPT_POSTFIELDS, $settings);
-            curl_setopt($request, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($request, CURLOPT_HTTPHEADER, $headers);
-
-            $curlCommand = $this->generateCurlCommand($this->listEndpoint(), "POST", $headers, $settings);
-            file_put_contents('php://stderr', "API Base - Comando LIST cURL:\n" . $curlCommand);
-
-            //make request
-            $response = curl_exec($request);
-            //respond status code
-            $responseStatusCode = curl_getinfo($request, CURLINFO_HTTP_CODE);
-            curl_close($request);
-            $response_decoded = (array) json_decode($response);
-
-            // rewind($verbose);
-            // $verboseLog = stream_get_contents($verbose);
-            // file_put_contents('php://stderr', "API Base - Log de depuración:\n" . htmlspecialchars($verboseLog));
-
-            return (new StdResponse($response_decoded, $responseStatusCode))();
-            
-        } catch (\Throwable $t) {
-            throw new \Exception("Error API Connection: " . $t->getMessage() . "\n");
-        }
+        return $this->send('POST', $this->listEndpoint(), $settings);
     }
 
     /**
@@ -96,35 +65,7 @@ abstract class APIBase
      */
     public function get(string $_resource_id): array
     {
-        try {
-            $request = curl_init($this->getEndpoint() . $_resource_id);
-            $headers = [
-                "Accept: application/json",
-                "Content-Type: application/json",
-                "Authorization: Bearer " . $this->token
-            ];
-
-            curl_setopt($request, CURLOPT_SSL_VERIFYPEER, false);
-            curl_setopt($request, CURLOPT_CUSTOMREQUEST, "GET");
-            curl_setopt($request, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($request, CURLOPT_HTTPHEADER, $headers);
-
-            $curlCommand = $this->generateCurlCommand($this->getEndpoint() . $_resource_id, "GET", $headers);
-            file_put_contents('php://stderr', "API Base - Comando GET cURL:\n" . $curlCommand);
-
-            //make request
-            $response = curl_exec($request);    
-            //respond status code
-            $responseStatusCode = curl_getinfo($request, CURLINFO_HTTP_CODE);
-            curl_close($request);
-
-            $response_decoded = (array) json_decode($response);
-
-            return (new StdResponse($response_decoded, $responseStatusCode))();
-                
-        } catch (\Throwable $t) {
-            throw new \Exception("Error API Connection: " . $t->getMessage() . "\n");
-        }
+        return $this->send('GET', $this->getEndpoint() . $_resource_id);
     }
 
     /**
@@ -135,37 +76,7 @@ abstract class APIBase
      */
     public function create(array $_body): array
     {
-        try {
-            $body = json_encode($_body);
-
-            $headers = [
-                "Accept: application/json",
-                "Content-Type: application/json",
-                "Content-Length: " . strlen($body),
-                "Authorization: Bearer " . $this->token
-            ];
-
-            $request = curl_init($this->createEndpoint()); 
-            curl_setopt($request, CURLOPT_SSL_VERIFYPEER, false);
-            curl_setopt($request, CURLOPT_CUSTOMREQUEST, "POST");
-            curl_setopt($request, CURLOPT_POSTFIELDS, $body);
-            curl_setopt($request, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($request, CURLOPT_HTTPHEADER, $headers);
-
-            $curlCommand = $this->generateCurlCommand($this->createEndpoint(), "POST", $headers, $body);
-            file_put_contents('php://stderr', "API Base - Comando CREATE cURL:\n" . $curlCommand);
-
-            //make request
-            $response = curl_exec($request);
-            //respond status code
-            $responseStatusCode = curl_getinfo($request, CURLINFO_HTTP_CODE);
-            curl_close($request);
-            $response_decoded = (array) json_decode($response);
-            return (new StdResponse($response_decoded, $responseStatusCode))();
-            
-        } catch (\Throwable $t) {
-            throw new \Exception("Error API Connection: " . $t->getMessage() . "\n");
-        }
+        return $this->send('POST', $this->createEndpoint(), json_encode($_body));
     }
 
     /**
@@ -177,37 +88,7 @@ abstract class APIBase
      */
     public function update(string $_resource_id, array $_body): array
     {
-        try {
-            $body = json_encode($_body);
-
-            $headers = [
-                "Accept: application/json",
-                "Content-Type: application/json",
-                "Content-Length: " . strlen($body),
-                "Authorization: Bearer " . $this->token
-            ];
-
-            $request = curl_init($this->updateEndpoint() . $_resource_id); 
-            curl_setopt($request, CURLOPT_SSL_VERIFYPEER, false);
-            curl_setopt($request, CURLOPT_CUSTOMREQUEST, "PUT");
-            curl_setopt($request, CURLOPT_POSTFIELDS, $body);
-            curl_setopt($request, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($request, CURLOPT_HTTPHEADER, $headers);
-
-            $curlCommand = $this->generateCurlCommand($this->updateEndpoint() . $_resource_id, "PUT", $headers, $body);
-            file_put_contents('php://stderr', "API Base - Comando UPDATE cURL:\n" . $curlCommand);
-
-            //make request
-            $response = curl_exec($request);
-            //respond status code
-            $responseStatusCode = curl_getinfo($request, CURLINFO_HTTP_CODE);
-            curl_close($request);
-            $response_decoded = (array) json_decode($response);
-            return (new StdResponse($response_decoded, $responseStatusCode))();
-            
-        } catch (\Throwable $t) {
-            throw new \Exception("Error API Connection: " . $t->getMessage() . "\n");
-        }
+        return $this->send('PUT', $this->updateEndpoint() . $_resource_id, json_encode($_body));
     }
 
     /**
@@ -218,35 +99,95 @@ abstract class APIBase
      */
     public function delete(string $_resource_id): array
     {
+        return $this->send('DELETE', $this->deleteEndpoint() . $_resource_id);
+    }
+
+    /**
+     * Envía la llamada y, si Laudus responde 401, refresca el bearer una sola vez y reintenta.
+     *
+     * @param string $method
+     * @param string $url
+     * @param string|null $body
+     * @return array
+     */
+    protected function send(string $method, string $url, ?string $body = null): array
+    {
+        $result = $this->executeOnce($method, $url, $body, $this->token);
+
+        if ((int) $result['statusCode'] === 401 && is_callable($this->refreshToken)) {
+            $newToken = call_user_func($this->refreshToken);
+            if (is_string($newToken) && $newToken !== '') {
+                $this->token = $newToken;
+            }
+            $result = $this->executeOnce($method, $url, $body, $this->token);
+        }
+
+        $decoded = (isset($result['decoded']) && is_array($result['decoded'])) ? $result['decoded'] : [];
+
+        return (new StdResponse($decoded, (int) $result['statusCode']))();
+    }
+
+    /**
+     * @param string $method
+     * @param string $url
+     * @param string|null $body
+     * @param string $token
+     * @return array{statusCode:int,decoded:array}
+     */
+    protected function executeOnce(string $method, string $url, ?string $body, string $token): array
+    {
         try {
-            $request = curl_init($this->deleteEndpoint() . $_resource_id);
-            $headers = [
-                "Accept: application/json",
-                "Content-Type: application/json",
-                "Authorization: Bearer " . $this->token
-            ];
-
-            curl_setopt($request, CURLOPT_SSL_VERIFYPEER, false);
-            curl_setopt($request, CURLOPT_CUSTOMREQUEST, "DELETE");
-            curl_setopt($request, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($request, CURLOPT_HTTPHEADER, $headers);
-
-            $curlCommand = $this->generateCurlCommand($this->deleteEndpoint() . $_resource_id, "DELETE", $headers);
-            file_put_contents('php://stderr', "API Base - Comando DELETE cURL:\n" . $curlCommand);
-
-            //make request
-            $response = curl_exec($request);    
-            //respond status code
-            $responseStatusCode = curl_getinfo($request, CURLINFO_HTTP_CODE);
-            curl_close($request);
-
-            $response_decoded = (array) json_decode($response);
-
-            return (new StdResponse($response_decoded, $responseStatusCode))();
-                
+            return $this->dispatch($method, $url, $body, $token);
         } catch (\Throwable $t) {
             throw new \Exception("Error API Connection: " . $t->getMessage() . "\n");
         }
+    }
+
+    /**
+     * Transporte HTTP. Los tests lo sustituyen para simular 401 sin red.
+     *
+     * @param string $method
+     * @param string $url
+     * @param string|null $body
+     * @param string $token
+     * @return array{statusCode:int,decoded:array}
+     */
+    protected function dispatch(string $method, string $url, ?string $body, string $token): array
+    {
+        $headers = [
+            "Accept: application/json",
+            "Content-Type: application/json",
+            "Authorization: Bearer " . $token,
+        ];
+
+        if ($body !== null) {
+            $headers[] = "Content-Length: " . strlen($body);
+        }
+
+        $request = curl_init($url);
+        curl_setopt($request, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($request, CURLOPT_CUSTOMREQUEST, $method);
+        curl_setopt($request, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($request, CURLOPT_HTTPHEADER, $headers);
+
+        if ($body !== null) {
+            curl_setopt($request, CURLOPT_POSTFIELDS, $body);
+        }
+
+        $curlCommand = $this->generateCurlCommand($url, $method, $headers, $body === null ? '' : $body);
+        file_put_contents('php://stderr', "API Base - Comando {$method} cURL:\n" . $curlCommand);
+
+        $response = curl_exec($request);
+        $responseStatusCode = curl_getinfo($request, CURLINFO_HTTP_CODE);
+        curl_close($request);
+
+        $decoded = json_decode((string) $response);
+        $decoded = (is_array($decoded) || is_object($decoded)) ? (array) $decoded : [];
+
+        return [
+            'statusCode' => (int) $responseStatusCode,
+            'decoded' => $decoded,
+        ];
     }
 
     /**

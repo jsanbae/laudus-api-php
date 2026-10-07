@@ -11,24 +11,28 @@ class Compras
 {
     private $token;
 
-    public function __construct(string $_token)
+    /** @var callable|null */
+    private $refreshToken;
+
+    public function __construct(string $_token, ?callable $refreshToken = null)
     {
         $this->token = $_token;
+        $this->refreshToken = $refreshToken;
     }
 
     public function Facturas(): APIBase
     {
-        return new Facturas($this->token);
+        return new Facturas($this->token, $this->refreshToken);
     }
 
     public function Proveedores(): APIBase
     {
-        return new Proveedores($this->token);
+        return new Proveedores($this->token, $this->refreshToken);
     }
 
     public function Pagos(): APIBase
     {
-        return new Pagos($this->token);
+        return new Pagos($this->token, $this->refreshToken);
     }
    
 

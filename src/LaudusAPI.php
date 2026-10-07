@@ -20,15 +20,53 @@ class LaudusAPI
     private $credential;
     private $jwt;
 
-    public function __construct(LaudusCredential $_credential)
+    /** @var callable|null */
+    private $unauthorizedHandler;
+
+    public function __construct(LaudusCredential $_credential, ?array $tokenData = null)
     {
         $this->credential = $_credential;
 
+        if ($this->canReuse($tokenData)) {
+            $this->jwt = $tokenData;
+            return;
+        }
+
         $getTokenResponse = $this->getToken();
 
-        if ($getTokenResponse['status'] === 'error') throw new \Exception("Error API Connection: " . $getTokenResponse['message'] . "\n");
+        if ($getTokenResponse['status'] === 'error') {
+            throw new \Exception("Error API Connection: " . $getTokenResponse['message'] . "\n");
+        }
 
-        $this->jwt = $this->getToken()['data'];
+        $this->jwt = $getTokenResponse['data'];
+    }
+
+    public function tokenPayload(): array
+    {
+        return $this->jwt;
+    }
+
+    public function refreshToken(): array
+    {
+        $getTokenResponse = $this->getToken();
+
+        if ($getTokenResponse['status'] === 'error') {
+            throw new \Exception("Error API Connection: " . $getTokenResponse['message'] . "\n");
+        }
+
+        $this->jwt = $getTokenResponse['data'];
+
+        return $this->jwt;
+    }
+
+    public function setUnauthorizedHandler(callable $handler): void
+    {
+        $this->unauthorizedHandler = $handler;
+    }
+
+    public function onUnauthorized(): ?callable
+    {
+        return $this->unauthorizedHandler;
     }
 
     //obtiene un token realizando un request a la API
@@ -78,71 +116,80 @@ class LaudusAPI
         return false;
     }
 
+    private function canReuse(?array $tokenData): bool
+    {
+        return is_array($tokenData)
+            && isset($tokenData['token'])
+            && is_string($tokenData['token'])
+            && $tokenData['token'] !== ''
+            && $this->isValidToken($tokenData);
+    }
+
     private function reValidatedToken(): array
     {
-        return (!$this->isValidToken($this->jwt)) ? $this->getToken()['data'] : $this->jwt;
+        return (!$this->isValidToken($this->jwt)) ? $this->refreshToken() : $this->jwt;
     }
 
     public function Cuentas(): Cuentas
     {
         $jwt = $this->reValidatedToken()['token'];
 
-        return new Cuentas($jwt);
+        return new Cuentas($jwt, $this->unauthorizedHandler);
     }
 
     public function Compras(): Compras
     {
         $jwt = $this->reValidatedToken()['token'];
 
-        return new Compras($jwt);
+        return new Compras($jwt, $this->unauthorizedHandler);
     }
     
     public function Ventas(): Ventas
     {
         $jwt = $this->reValidatedToken()['token'];
 
-        return new Ventas($jwt);
+        return new Ventas($jwt, $this->unauthorizedHandler);
     }
 
     public function Mayor(): Mayor
     {
         $jwt = $this->reValidatedToken()['token'];
 
-        return new Mayor($jwt);
+        return new Mayor($jwt, $this->unauthorizedHandler);
     }
     public function Comprobante(): Comprobante
     {
         $jwt = $this->reValidatedToken()['token'];
 
-        return new Comprobante($jwt);
+        return new Comprobante($jwt, $this->unauthorizedHandler);
     }
 
     public function CentrosCostos(): CentrosCostos 
     {
         $jwt = $this->reValidatedToken()['token'];
 
-        return new CentrosCostos($jwt);
+        return new CentrosCostos($jwt, $this->unauthorizedHandler);
     }
 
     public function System(): System
     {
         $jwt = $this->reValidatedToken()['token'];
 
-        return new System($jwt);
+        return new System($jwt, $this->unauthorizedHandler);
     }
 
     public function Productos(): Productos
     {
         $jwt = $this->reValidatedToken()['token'];
 
-        return new Productos($jwt);
+        return new Productos($jwt, $this->unauthorizedHandler);
     }
 
     public function Remuneracion(): Remuneracion
     {
         $jwt = $this->reValidatedToken()['token'];
 
-        return new Remuneracion($jwt);
+        return new Remuneracion($jwt, $this->unauthorizedHandler);
     }
 
 }
