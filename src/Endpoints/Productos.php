@@ -3,7 +3,6 @@
 namespace Jsanbae\LaudusAPIPHP\Endpoints;
 
 use Jsanbae\LaudusAPIPHP\APIBase;
-use Jsanbae\LaudusAPIPHP\StdResponse;
 
 class Productos extends APIBase 
 {
@@ -62,9 +61,9 @@ class Productos extends APIBase
         'pictures.type'
     ];
 
-    public function __construct(string $_token)
+    public function __construct(string $_token, ?callable $refreshToken = null)
     {
-        parent::__construct($_token);
+        parent::__construct($_token, $refreshToken);
     }
 
     protected function getEndpoint(): string
@@ -90,59 +89,12 @@ class Productos extends APIBase
 
     public function getStock(): array
     {
-        try {
-            $endpoint_url = "https://api.laudus.cl/production/products/stock";
-
-            $request = curl_init($endpoint_url);
-            curl_setopt($request, CURLOPT_SSL_VERIFYPEER, false);
-            curl_setopt($request, CURLOPT_CUSTOMREQUEST, "GET");
-            curl_setopt($request, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($request, CURLOPT_HTTPHEADER, array(
-                "Accept: application/json",
-                "Content-Type: application/json",
-                "Authorization: Bearer " . $this->token)
-            );
-    
-            //make request
-            $response = curl_exec($request);    
-            //respond status code
-            $responseStatusCode = curl_getinfo($request, CURLINFO_HTTP_CODE);
-            curl_close($request);
-            
-            $response_decoded = (array) json_decode($response);
-            return (new StdResponse($response_decoded, $responseStatusCode))();
-                    
-        } catch (\Throwable $t) {
-            throw new \Exception("Error API Connection: " . $t->getMessage() . "\n");
-        }
+        return $this->send('GET', 'https://api.laudus.cl/production/products/stock');
     }
 
     public function getStockByProductId(string $_productId):array
     {
-        try {
-            $endpoint_url = "https://api.laudus.cl/production/products/".$_productId."/stock";
-
-            $request = curl_init($endpoint_url);
-            curl_setopt($request, CURLOPT_SSL_VERIFYPEER, false);
-            curl_setopt($request, CURLOPT_CUSTOMREQUEST, "GET");
-            curl_setopt($request, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($request, CURLOPT_HTTPHEADER, array(
-                "Accept: application/json",
-                "Content-Type: application/json",
-                "Authorization: Bearer " . $this->token)
-            );
-    
-            //make request
-            $response = curl_exec($request);    
-            //respond status code
-            $responseStatusCode = curl_getinfo($request, CURLINFO_HTTP_CODE);
-            curl_close($request);
-            
-            $response_decoded = (array) json_decode($response);
-            return (new StdResponse($response_decoded, $responseStatusCode))();
-        } catch (\Throwable $t) {
-            throw new \Exception("Error API Connection: " . $t->getMessage() . "\n");
-        }
+        return $this->send('GET', 'https://api.laudus.cl/production/products/'.$_productId.'/stock');
     }
 
 }

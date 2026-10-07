@@ -10,18 +10,22 @@ class Remuneracion
 {
     private $token;
 
-    public function __construct(string $_token)
+    /** @var callable|null */
+    private $refreshToken;
+
+    public function __construct(string $_token, ?callable $refreshToken = null)
     {
         $this->token = $_token;
+        $this->refreshToken = $refreshToken;
     }
 
     public function LibroRemuneracion(): APIBase
     {
-        return new LibroRemuneracion($this->token);
+        return new LibroRemuneracion($this->token, $this->refreshToken);
     }
 
     public function Empleado(): APIBase
     {
-        return new Empleado($this->token);
+        return new Empleado($this->token, $this->refreshToken);
     }
 }

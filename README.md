@@ -25,7 +25,32 @@ $vatid = $_ENV['API_LAUDUS_VATID'];
 $api_client = new LaudusAPI(new LaudusCredential($username, $password, $vatid));
 ```
 
-### 3. Usa alguno de los Servicios disponibles
+### 3. (Opcional) Reutiliza el token y reintenta ante un 401
+
+Cada `new LaudusAPI(...)` hace login en Laudus. Para evitarlo, guarda el token (por ejemplo en caché) y pásalo como segundo argumento: si trae `token` y su `expiration` sigue vigente, no se llama al login.
+
+```(php)
+$tokenData = $cache->get('laudus_token'); // ['token' => '...', 'expiration' => '...'] o null
+
+$api_client = new LaudusAPI(new LaudusCredential($username, $password, $vatid), $tokenData);
+
+$cache->put('laudus_token', $api_client->tokenPayload());
+```
+
+Laudus puede invalidar un token antes de su `expiration`. Si registras un handler, cuando una llamada responde 401 el cliente lo invoca **una sola vez** y reintenta con el token que devuelva. El handler debe devolver el bearer como **string**, no el array de `refreshToken()`:
+
+```(php)
+$api_client->setUnauthorizedHandler(function () use ($api_client, $cache) {
+    $tokenData = $api_client->refreshToken();
+    $cache->put('laudus_token', $tokenData);
+
+    return $tokenData['token'];
+});
+```
+
+Registra el handler antes de pedir los servicios (`$api_client->Ventas()`, etc.): cada servicio recibe el handler vigente al momento de crearse. Si el reintento también responde 401, se devuelve el error sin volver a refrescar.
+
+### 4. Usa alguno de los Servicios disponibles
 
 ```(php)
 // Obten una factura de proveedor por ID
@@ -78,6 +103,8 @@ Cuenta con unos pocos, se irán agregando en la medida que los vaya necesitando.
 - Generar Token (JWT)
 - Validar Token
 - ReValidar Token
+- Reutilizar Token guardado
+- Refrescar Token y reintentar ante un 401
 
 ### Compras
 
@@ -178,11 +205,19 @@ class Clientes extends APIBase
     {
         return 'url_endpoint_delete'; // Ejemplo: 'https://api.laudus.cl/sales/customers/';
     }
+
+    // Métodos propios: usa $this->send() para heredar el reintento ante un 401
+    public function getStock(): array
+    {
+        return $this->send('GET', 'url_endpoint_stock');
+    }
 }
 
 ```
 
 Cada servicio expone los métodos `get($id)`, `list($settings)`, `create($body)`, `update($id, $body)` y `delete($id)`.
+
+Si el servicio define su propio constructor, debe aceptar y propagar el handler: `parent::__construct($_token, $refreshToken)`.
 
 ## Clase StdResponse
 
@@ -209,6 +244,12 @@ Ejecuta los tests con PHPUnit:
 
 ```(bash)
 ./vendor/bin/phpunit ./test
+```
+
+La mayoría de los tests llama a la API real y requiere el `.env`. Los tests de token y del reintento por 401 no usan red:
+
+```(bash)
+./vendor/bin/phpunit test/LaudusAPITokenTest.php test/UnauthorizedRetryTest.php
 ```
 
 ## Contribuciones

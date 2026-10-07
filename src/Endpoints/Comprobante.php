@@ -45,9 +45,9 @@ class Comprobante extends APIBase
         // 'lines.relatedTo.vatId',
     ];
 
-    public function __construct(string $_token)
+    public function __construct(string $_token, ?callable $refreshToken = null)
     {
-        parent::__construct($_token);
+        parent::__construct($_token, $refreshToken);
     }
 
     protected function getEndpoint(): string
